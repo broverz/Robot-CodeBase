@@ -6,8 +6,8 @@ void MazeMission() {
   oled.text(3, 4, "Maze Mission");
   oled.show();
   while (true) {
-    mManual(100, 100, 1500, true);
-    mManual(100, -100, 150, true);
+    mManual(100, 100, 150, true);
+    mManual(75, -75, 150, true);
     mManual(100, 100, 150, true);
     break;
   }
