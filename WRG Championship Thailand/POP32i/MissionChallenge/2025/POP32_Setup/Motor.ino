@@ -19,6 +19,6 @@ void FL(int speed = 100, int timeout = 250){
 
 void FR(int speed = 100, int timeout = 250){
  mManual(-speed, speed, timeout);
- mManual(-speed, speed, 25);
+ mManual(speed, -speed, 25);
 //  mManual(-speed, -speed, 100);
 }
