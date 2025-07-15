@@ -1,4 +1,6 @@
 void mManual(int lspeed = 100, int rspeed = 100, int timeout = 500, bool doBeep = true);
+void FF(int speed = 100, int timeout = 250);
+void FL(int speed = 100, int timeout = 250);
 
 void MazeMission() {
   beep();
@@ -6,9 +8,11 @@ void MazeMission() {
   oled.text(3, 4, "Maze Mission");
   oled.show();
   while (true) {
-    mManual(100, 100, 150, true);
-    mManual(75, -75, 150, true);
-    mManual(100, 100, 150, true);
+    FF(100, 220);
+    FL(100, 110);
+    FF(-100, 225);
+    FF(100, 580);
+    // FL(100, 165);
     break;
   }
   oled.clear();
