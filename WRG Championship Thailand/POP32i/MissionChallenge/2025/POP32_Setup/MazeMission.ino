@@ -3,6 +3,11 @@ void FF(int speed = 100, int timeout = 250);
 void FL(int speed = 100, int timeout = 250);
 void FR(int speed = 100, int timeout = 250);
 
+// mManual กำหนดเอง
+// FF เดินหน้าใส่ 100 ถอยหลัง -100
+// FL เลื้ยวซ้าย
+// FR เลื้ยวชวา
+
 void MazeMission() {
   beep();
   oled.clear();
