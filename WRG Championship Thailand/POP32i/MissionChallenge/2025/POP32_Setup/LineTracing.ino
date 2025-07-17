@@ -1,8 +1,11 @@
+void ConvertADC(bool showADC = false);
+
 void LineTracing() {
   beep();
   oled.clear();
   while (true) {
-    ShowADC();
+    // ShowADC();
+    ConvertADC(true);
 
     // sleep(2000);
     // break;
