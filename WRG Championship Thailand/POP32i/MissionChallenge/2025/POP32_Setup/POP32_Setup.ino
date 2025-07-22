@@ -8,20 +8,9 @@ int RefC = 3719;
 int RefR = 3715;
 int RefR1 = 3710;
 
-int Kp, Ki, Kd, Error, PreError, Integral, MaxSpeed;
-
-int Speed = 100;
-int SlowSpeed;
-int SuperSlowSpeed;
-int LeftSpeed, RightSpeed;
-int TurnSpeed;
+int Error, PreError, Integral;
 
 void setup() {
-  LeftSpeed = Speed * .75;
-  RightSpeed = Speed * .75;
-  TurnSpeed = Speed * 1.42;
-  SlowSpeed = Speed * 0.625;
-  SuperSlowSpeed = Speed * 0.20;
 	beep();
 	oled.text(3, 4, "Sawas Dee Krub");
 	oled.show();
