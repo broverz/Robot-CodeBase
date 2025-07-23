@@ -3,9 +3,12 @@
 // FL เลื้ยวซ้าย
 // FR เลื้ยวชวา
 
+const int Motor_Left = 2;
+const int Motor_Right = 1;
+
 void mManual(int lspeed = 100, int rspeed = 100, int timeout = 500, bool doBeep = true) {
-  motor(1, lspeed);
-  motor(4, rspeed);
+  motor(Motor_Left, rspeed);
+  motor(Motor_Right, lspeed);
   sleep(timeout);
   ao();
   if (doBeep) beep();
@@ -13,21 +16,18 @@ void mManual(int lspeed = 100, int rspeed = 100, int timeout = 500, bool doBeep 
 
 void FF(int speed = 100, int timeout = 250) {
   mManual(speed, speed - 6, timeout);
-  mManual(-speed, -speed, 80);
+  // mManual(-speed, -speed, 80);
 }
 
 void FL(int speed = 100, int timeout = 250) {
   mManual(speed, -speed, timeout);
-  mManual(-speed, speed, 25);
-  //  mManual(-speed, -spee, 100);
+  // mManual(-speed, speed, 25);
 }
 
 void FR(int speed = 100, int timeout = 250) {
   mManual(-speed, speed, timeout);
-  mManual(speed, -speed, 25);
-  //  mManual(-speed, -speed, 100);
+  // mManual(speed, -speed, 25);
 }
-
 
 void gyroTurn(float targetAngle, int speed) {
   mpu.update();
@@ -70,17 +70,15 @@ void GYROFF(int timeout = 140) {
     int leftSpeed = constrain(baseSpeed - correction, 0, 100);
     int rightSpeed = constrain(baseSpeed + correction, 0, 100);
 
-    // fd2(leftSpeed, rightSpeed);
     motor(1, leftSpeed);
     motor(2, rightSpeed);
     delay(10);
   }
-
   ao();
 }
 
 // === เดินหน้าแล้วเลี้ยวซ้าย 90 องศา ===
-void GYROFL(int deg = 61, int timeoutFF = 0) {
+void GYROFL(int deg = 41, int timeoutFF = 0) {
   GYROFF(timeoutFF);
   gyroTurn(deg, 100);
   ao();
@@ -88,7 +86,7 @@ void GYROFL(int deg = 61, int timeoutFF = 0) {
 }
 
 // === เดินหน้าแล้วเลี้ยวขวา 90 องศา ===
-void GYROFR(int deg = 61, int timeoutFF = 0) {
+void GYROFR(int deg = 41, int timeoutFF = 0) {
   GYROFF(timeoutFF);
   gyroTurn(-deg, 100);
   ao();
