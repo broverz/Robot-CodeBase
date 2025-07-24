@@ -13,7 +13,8 @@ void LineTracing() {
   beep();
   oled.clear();
   while (true) {
-    ShowADC(); // ConvertADC();
+    // ShowADC();
+    ConvertADC(true);
     // CalError();
     // if (Error == 100) {
     //   motor(4, 0);
@@ -33,8 +34,8 @@ void PIDControl() {
   CalError();
 
   if (Error == 100) {
-    motor(4, 0);
-    motor(1, 0);
+    motor(Motor_Left, 0);
+    motor(Motor_Right, 0);
     return;
   }
 
@@ -51,6 +52,6 @@ void PIDControl() {
   leftSpeed = constrain(leftSpeed, 0, maxSpeed);
   rightSpeed = constrain(rightSpeed, 0, maxSpeed);
 
-  motor(1, leftSpeed);
-  motor(4, rightSpeed);
+  motor(Motor_Right, leftSpeed);
+  motor(Motor_Left, rightSpeed);
 }

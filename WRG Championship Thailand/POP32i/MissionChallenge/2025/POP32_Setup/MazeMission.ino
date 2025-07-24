@@ -13,14 +13,25 @@ void MazeMission() {
   oled.show();
   while (true) {
     GYROFF(110);
-    GYROFL(42);
-    GYROFF(400);
+    GYROFL(40);
+    GYROFF(410);
     GYROFR(40);
     GYROFF(190);
+    GYROFR(40);
+    GYROFF(180);
+    GYROFL(48);
+    GYROFF(230);
     GYROFR(40);
     GYROFF(200);
-    GYROFL(42);
-    GYROFF(190);
+    GYROFR(40);
+    GYROFF(220);
+    GYROFL(38);
+    GYROFF(350);
+    GYROFL(48);
+    GYROFF(376);
+    GYROFL(38);
+    GYROFF(235);
+    GYROFR(38);
     ao();
     break;
   }

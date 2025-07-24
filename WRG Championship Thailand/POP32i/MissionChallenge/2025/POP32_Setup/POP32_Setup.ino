@@ -2,13 +2,16 @@
 
 int l1, l, c, r, r1;
 
-int RefL1 = 3619;
-int RefL = 3617;
-int RefC = 3616;
-int RefR = 3615;
-int RefR1 = 3620;
+int RefL1 = 3895;
+int RefL = 3891;
+int RefC = 3892;
+int RefR = 3891;
+int RefR1 = 3896;
 
 int Error, PreError, Integral;
+
+const int Motor_Left = 2;
+const int Motor_Right = 1;
 
 #include "Wire.h"
 #include <MPU6050_light.h>

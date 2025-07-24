@@ -14,11 +14,11 @@ void ConvertADC(bool showADC = false) {
   r = analog(1);
   r1 = analog(0);
 
-  l1 = (RefL1 <= l1) ? 1 : 0;
-  l = (RefL <= l) ? 1 : 0;
-  c = (RefC <= c) ? 1 : 0;
-  r = (RefR <= r) ? 1 : 0;
-  r1 = (RefR1 <= r1) ? 1 : 0;
+  l1 = (RefL1 > l1) ? 0 : 1;
+  l = (RefL > l) ? 0 : 1;
+  c = (RefC > c) ? 0 : 1;
+  r = (RefR > r) ? 0 : 1;
+  r1 = (RefR1 > r1) ? 0 : 1;
 
   if (showADC) ADC();
 }
