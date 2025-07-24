@@ -2,8 +2,8 @@ float Kp = 15.0;
 float Ki = 0.0;
 float Kd = 8.0;
 
+float integral = 0.0;
 int lastError = 0;
-float integral = 0;
 int baseSpeed = 50;
 int maxSpeed = 100;
 
@@ -14,20 +14,17 @@ void LineTracing() {
   oled.clear();
   while (true) {
     // ShowADC();
-    ConvertADC(true);
-    // CalError();
+    CalError();
     // if (Error == 100) {
-    //   motor(4, 0);
-    //   motor(1, 0);
+    //   motor(Motor_Left, 0);
+    //   motor(Motor_Right, 0);
     //   break;
     // }
 
     // PIDControl();
     // delay(10);
   }
-  oled.clear();
-  oled.text(3, 4, "Press A to go to the next step");
-  oled.show();
+  showMessageCenter("Press A to go to the next step");
 }
 
 void PIDControl() {
@@ -43,7 +40,6 @@ void PIDControl() {
   integral += Error;
   int D = Error - lastError;
   lastError = Error;
-
   float correction = (Kp * P) + (Ki * integral) + (Kd * D);
 
   int leftSpeed = baseSpeed - correction;
@@ -52,6 +48,6 @@ void PIDControl() {
   leftSpeed = constrain(leftSpeed, 0, maxSpeed);
   rightSpeed = constrain(rightSpeed, 0, maxSpeed);
 
-  motor(Motor_Right, leftSpeed);
-  motor(Motor_Left, rightSpeed);
+  motor(Motor_Left, leftSpeed);
+  motor(Motor_Right, rightSpeed);
 }

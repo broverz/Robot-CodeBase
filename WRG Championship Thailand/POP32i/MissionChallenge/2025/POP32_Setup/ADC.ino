@@ -7,19 +7,16 @@ void ShowADC() {
   ADC();
 }
 
+inline int toBinary(int value, int ref) {
+  return (value < ref) ? 0 : 1;
+}
+
 void ConvertADC(bool showADC = false) {
-  l1 = analog(4);
-  l = analog(3);
-  c = analog(2);
-  r = analog(1);
-  r1 = analog(0);
-
-  l1 = (RefL1 > l1) ? 0 : 1;
-  l = (RefL > l) ? 0 : 1;
-  c = (RefC > c) ? 0 : 1;
-  r = (RefR > r) ? 0 : 1;
-  r1 = (RefR1 > r1) ? 0 : 1;
-
+  l1 = toBinary(analog(4), RefL1);
+  l = toBinary(analog(3), RefL);
+  c = toBinary(analog(2), RefC);
+  r = toBinary(analog(1), RefR);
+  r1 = toBinary(analog(0), RefR1);
   if (showADC) ADC();
 }
 
