@@ -35,6 +35,7 @@ void CalError() {
 }
 
 void ADC() {
+  oled.clear();
   oled.text(2, 0, "L1 = %d", l1);
   oled.text(3, 0, "L = %d", l);
   oled.text(4, 0, "C = %d", c);

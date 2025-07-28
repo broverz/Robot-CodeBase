@@ -1,4 +1,5 @@
 #include <POP32.h>
+#include <Servo.h>
 
 #include "Wire.h"
 #include <MPU6050_light.h>
@@ -6,11 +7,11 @@
 
 int l1, l, c, r, r1;
 
-int RefL1 = 3895;
-int RefL = 3891;
-int RefC = 3892;
-int RefR = 3891;
-int RefR1 = 3896;
+const int RefL1 = 3617;
+const int RefL = 3616;
+const int RefC = 3615;
+const int RefR = 3614;
+const int RefR1 = 3618;
 
 int Error;
 
@@ -23,7 +24,16 @@ float TurnOutput = 0.0;
 float turnSetpoint = 0.0;
 QuickPID turnPID(&currentAngle, &TurnOutput, &turnSetpoint);
 
+Servo sv6;
+Servo sv5;
+
 void setup() {
+	sv6.attach(6);
+	sv5.attach(5);
+
+	sv6.write(90);
+	sv5.write(90);
+
 	Serial.begin(115200);
 	Wire.begin();
 	mpu.begin();
