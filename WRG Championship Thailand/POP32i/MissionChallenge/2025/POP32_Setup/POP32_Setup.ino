@@ -31,6 +31,10 @@ void setup() {
 	turnPID.SetOutputLimits(-255, 255);
 	turnPID.SetTunings(2.0, 5.0, 1.0);
 
+  servo(4, 100);
+  servo(5, 280);
+  servo(6, 100);
+
 	ao();
 	beep();
 	showMessageCenter("Sawas Dee Krub");

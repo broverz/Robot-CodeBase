@@ -10,9 +10,12 @@ void fanMotor(int timeout = 1000);
 void BallZone() {
   beep();
   showMessageCenter("Ball Zone");
+  servo(4, 152);
+  servo(5, 152);
+  servo(6, 152);
   while (true) {
-    gyroFF(190, 100);
-    fanMotor(5000);
+    // gyroFF(190, 100);
+    // fanMotor(5000);
     // gyroFF(12000, 45);
     break;
   }
@@ -20,7 +23,7 @@ void BallZone() {
 }
 
 void fanMotor(int timeout = 1000) {
-  motor(3,100);
-  motor(4,100);
+  motor(3, 100);
+  motor(4, 100);
   sleep(timeout);
 }

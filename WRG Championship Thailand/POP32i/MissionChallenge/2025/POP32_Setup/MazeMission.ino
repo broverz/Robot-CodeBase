@@ -10,7 +10,7 @@ void MazeMission() {
   beep();
   showMessageCenter("Maze Mission");
   while (true) {
-    gyroFL(42,200);
+    gyroFL(42, 200);
     gyroFF(410);
     gyroFR(42);
     gyroFF(385);
