@@ -57,7 +57,7 @@ void gyroFF(int timeout = 140, int baseSpeed = 100) {
   while (millis() - startTime < timeout) {
     mpu.update();
     float error = initialAngle - mpu.getAngleZ();
-    float correction = 2.0 * error;
+    float correction = 1.25 * error;
 
     int leftSpeed = constrain(baseSpeed - correction, 0, 100);
     int rightSpeed = constrain(baseSpeed + correction, 0, 100);

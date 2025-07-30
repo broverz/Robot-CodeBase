@@ -1,7 +1,6 @@
 #include <POP32.h>
-#include <Servo.h>
 
-#include "Wire.h"
+#include <Wire.h>
 #include <MPU6050_light.h>
 #include <QuickPID.h>
 
@@ -24,16 +23,7 @@ float TurnOutput = 0.0;
 float turnSetpoint = 0.0;
 QuickPID turnPID(&currentAngle, &TurnOutput, &turnSetpoint);
 
-Servo sv6;
-Servo sv5;
-
 void setup() {
-	sv6.attach(6);
-	sv5.attach(5);
-
-	sv6.write(90);
-	sv5.write(90);
-
 	Serial.begin(115200);
 	Wire.begin();
 	mpu.begin();
@@ -43,9 +33,7 @@ void setup() {
 
 	ao();
 	beep();
-
-	oled.text(3, 4, "Sawas Dee Krub");
-	oled.show();
+	showMessageCenter("Sawas Dee Krub");
 }
 
 void loop() {
