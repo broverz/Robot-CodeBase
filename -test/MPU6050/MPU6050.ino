@@ -72,7 +72,9 @@ void loop() {
   }
 
   if (SW_B()) {
-    CheckMotion();
+    while (true) {
+      CheckMotion();
+    }
     delay(300);
   }
 }
