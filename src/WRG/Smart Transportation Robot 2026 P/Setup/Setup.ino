@@ -7,9 +7,9 @@
 
 MPU6050 mpu;
 
-float Kp = 15.0f;
+float Kp = 25.0f;
 float Ki = 0.0f;
-float Kd = 5.0f;
+float Kd = 8.0f;
 
 float lineInput = 0;
 float lineOutput = 0;
