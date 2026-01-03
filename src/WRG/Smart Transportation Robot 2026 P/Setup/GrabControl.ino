@@ -1,25 +1,33 @@
-void mManual(int lspeed = 100, int rspeed = 100, int timeout = 500, bool doBeep = false);
-
-#define sv1Open 20
-#define sv1Close 90
-#define sv2Open 160
-#define sv2Close 90
+ void mManual(int lspeed = 100, int rspeed = 100, int timeout = 250, bool doBeep = false);
 
 void grabBk() {
   mManual(0, 0); ao();
-  sv1.attach(sv1PIN);
-  sv2.attach(sv2PIN);
 
-  sv1.write(sv1Open);
-  sv2.write(sv1Close);
-  delay(300);
-
-  sv1.write(sv2Open);
-  sv2.write(sv2Close);
+  servo(5, 80);
+  delay(250);
+  servo(6, 110);
   delay(500);
 
-  sv1.detach();
-  sv2.detach();
+  servo(5, 142);
+  delay(500);
+  servo(6, 30);
+  delay(500);
+
+  beep();
+}
+
+void putBk() {
+  mManual(0, 0); ao();
+
+  servo(6, 110);
+  delay(250);
+  servo(5, 80);
+  delay(500);
+
+  servo(6, 30);
+  delay(500);
+  servo(5, 142);
+  delay(500);
 
   beep();
 }

@@ -3,14 +3,16 @@ extern int16_t gx, gy, gz;
 extern float yaw, currentYaw;
 extern unsigned long lastTime;
 
-#define Motor_Left 1
-#define Motor_Right 3
+#define Motor_Left 3
+#define Motor_Right 1
 
-void mManual(int lspeed = 100, int rspeed = 100, int timeout = 500, bool doBeep = false) {
-  motor(Motor_Left, rspeed);
-  motor(Motor_Right, lspeed);
-  delay(timeout);
-  ao();
+void mManual(int lspeed = 100, int rspeed = 100, int timeout = 250, bool doBeep = false) {
+  motor(Motor_Left, lspeed);
+  motor(Motor_Right, rspeed);
+  if (timeout > 0) {
+    delay(timeout);
+    ao();
+  }
   if (doBeep) beep();
 }
 
@@ -64,7 +66,7 @@ void gyroFL(float angle) {
   updateMPU();
   float target = currentYaw + angle;
   while (currentYaw < target) {
-    mManual(-80, 80);
+    mManual(-40, 40);
     updateMPU();
   }
   mManual(0, 0);
@@ -74,7 +76,7 @@ void gyroFR(float angle) {
   updateMPU();
   float target = currentYaw - angle;
   while (currentYaw > target) {
-    mManual(80, -80);
+    mManual(40, -40);
     updateMPU();
   }
   mManual(0, 0);

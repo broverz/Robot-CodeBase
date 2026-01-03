@@ -3,15 +3,24 @@
 #include <Wire.h>
 #include <I2Cdev.h>
 #include <MPU6050.h>
-#include <Servo.h>
+#include <QuickPID.h>
 
 MPU6050 mpu;
 
-Servo sv1;
-Servo sv2;
+float Kp = 15.0f;
+float Ki = 0.0f;
+float Kd = 5.0f;
 
-#define sv1PIN 6
-#define sv2PIN 5
+float lineInput = 0;
+float lineOutput = 0;
+float lineSetpoint = 0;
+
+QuickPID pid(&lineInput, &lineOutput, &lineSetpoint,
+             Kp, Ki, Kd,
+             QuickPID::Action::direct);
+
+#define sv1PIN 1
+#define sv2PIN 2
 
 int16_t gx, gy, gz;
 float yaw = 0;
@@ -22,6 +31,12 @@ void setup() {
   Serial.begin(115200);
   Wire.begin();
   mpu.initialize();
+
+  pid.SetMode(QuickPID::Control::automatic);
+  pid.SetOutputLimits(-60, 60);
+  pid.SetSampleTimeUs(10000);
+  pid.SetTunings(Kp, Ki, Kd);
+
   delay(100);
 
   if (!mpu.testConnection()) {
@@ -33,12 +48,9 @@ void setup() {
   mpu.CalibrateAccel(6);
   lastTime = millis();
 
-  sv1.attach(sv1PIN);
-  sv2.attach(sv2PIN);
+  servo(5, 125);
+  servo(6, 30);
 
-  sv1.detach();
-  sv2.detach();
-  
   ao();
   beep();
   showMessageCenter("SSKW RB Ready");
@@ -46,7 +58,7 @@ void setup() {
 
 void loop() {
   if (SW_A()) SLeft();
-  if (SW_B()) SRight();
+  if (SW_OK()) SRight();
 }
 
 void showMessageCenter(const char* msg) {
