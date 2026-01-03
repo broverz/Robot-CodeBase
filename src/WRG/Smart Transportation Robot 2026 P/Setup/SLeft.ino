@@ -13,7 +13,7 @@ void SLeft() {
   delay(50);
   resetYaw();
   gyroFF(10, 25);
-  gyroFL(58);
+  gyroFL(55);
 
   //
   lineTrackingPID();
@@ -25,5 +25,6 @@ void SLeft() {
   lineTrackingPID();
   delay(50);
   resetYaw();
-  gyroFF(10, 25);
+  gyroFF(10, 35);
+  gyroFL(55);
 }
