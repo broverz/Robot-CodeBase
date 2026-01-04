@@ -12,7 +12,7 @@
 int sensorPin[NUM_SENSORS] = { A0, A1, A2, A3, A4 };
 int sensorVal[NUM_SENSORS];
 int baseLight[NUM_SENSORS] = {
-  2560,
+  2520,
   3900,
   3700,
   3800,
