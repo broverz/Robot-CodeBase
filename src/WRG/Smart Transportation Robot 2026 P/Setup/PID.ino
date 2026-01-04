@@ -18,23 +18,36 @@ int baseLight[NUM_SENSORS] = {
   3800,
   3800
 };
-int weight[NUM_SENSORS] = { -3, -1.5, 0, 1.5, 3 };
+float weight[NUM_SENSORS] = { -3, -1.5, 0, 1.5, 3 };
 
 double readLinePosition() {
-  long sum = 0;
-  int countBlack = 0;
+  double sum = 0;
+  double total = 0;
 
   for (int i = 0; i < NUM_SENSORS; i++) {
     sensorVal[i] = analogRead(sensorPin[i]);
 
-    if (sensorVal[i] < baseLight[i]) {
-      sum += weight[i];
-      countBlack++;
-    }
+    double value = baseLight[i] - sensorVal[i];
+    if (value < 0) value = 0;
+
+    sum += value * weight[i];
+    total += value;
   }
 
-  if (countBlack == 0) return 0;
-  return (double)sum / countBlack;
+  if (total == 0) return 0;
+  return sum / total;
+}
+
+bool isCenterAllBlack() {
+  int centerIndex[3] = { 1, 2, 3 };
+
+  for (int i = 0; i < 3; i++) {
+    int idx = centerIndex[i];
+    if (analogRead(sensorPin[idx]) >= baseLight[idx]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool isAllBlack() {
@@ -50,7 +63,7 @@ void lineTrackingPID() {
   while (true) {
     lineInput = readLinePosition();
 
-    if (isAllBlack()) {
+    if (isCenterAllBlack()) {
       ao();
       pid.Reset();
       return;
@@ -79,7 +92,7 @@ void lineTrackingPID() {
 
     leftSpeed = constrain(leftSpeed, 0, 100);
     rightSpeed = constrain(rightSpeed, 0, 100);
-    
+
     Serial.print(" L:");
     Serial.print(leftSpeed);
     Serial.print(" R:");
@@ -87,7 +100,7 @@ void lineTrackingPID() {
 
     motor(3, leftSpeed);
     motor(1, rightSpeed);
-    
+
     // delay(10);
   }
 }
