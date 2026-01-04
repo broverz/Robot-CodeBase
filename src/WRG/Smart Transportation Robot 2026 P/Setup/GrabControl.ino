@@ -1,4 +1,4 @@
- void mManual(int lspeed = 100, int rspeed = 100, int timeout = 250, bool doBeep = false);
+ void mManual(int lspeed = 100, int rspeed = 100, int timeout = 0, bool doBeep = false);
 
 void grabBk() {
   mManual(0, 0); ao();

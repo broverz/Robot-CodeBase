@@ -6,7 +6,7 @@ extern unsigned long lastTime;
 #define Motor_Left 3
 #define Motor_Right 1
 
-void mManual(int lspeed = 100, int rspeed = 100, int timeout = 250, bool doBeep = false) {
+void mManual(int lspeed = 100, int rspeed = 100, int timeout = 0, bool doBeep = false) {
   motor(Motor_Left, lspeed);
   motor(Motor_Right, rspeed);
   if (timeout > 0) {
