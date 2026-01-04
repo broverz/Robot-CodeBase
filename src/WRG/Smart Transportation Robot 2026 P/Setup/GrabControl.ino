@@ -5,12 +5,12 @@ void grabBk() {
 
   servo(5, 80);
   delay(250);
-  servo(6, 110);
+  servo(6, 130);
   delay(500);
 
-  servo(5, 142);
+  servo(5, 125);
   delay(500);
-  servo(6, 30);
+  servo(6, 45);
   delay(500);
 
   beep();
@@ -24,9 +24,9 @@ void putBk() {
   servo(5, 80);
   delay(500);
 
-  servo(6, 30);
+  servo(6, 45);
   delay(500);
-  servo(5, 142);
+  servo(5, 125);
   delay(500);
 
   beep();
