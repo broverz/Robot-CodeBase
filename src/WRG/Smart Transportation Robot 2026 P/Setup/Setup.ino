@@ -59,6 +59,7 @@ void setup() {
 void loop() {
   if (SW_A()) SLeft();
   if (SW_OK()) SRight();
+  if (SW_B()) CheckLight();
 }
 
 void showMessageCenter(const char* msg) {
