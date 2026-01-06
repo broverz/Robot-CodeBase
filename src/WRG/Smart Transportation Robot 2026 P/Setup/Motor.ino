@@ -60,13 +60,14 @@ void gyroFF(int timeMs, int speed) {
     updateMPU();
   }
   mManual(0, 0);
+  delay(55);
 }
 
 void gyroFL(float angle) {
   updateMPU();
   float target = currentYaw + angle;
   while (currentYaw < target) {
-    mManual(-40, 40);
+    mManual(-65, 65);
     updateMPU();
   }
   mManual(0, 0);
@@ -76,7 +77,7 @@ void gyroFR(float angle) {
   updateMPU();
   float target = currentYaw - angle;
   while (currentYaw > target) {
-    mManual(40, -40);
+    mManual(65, -65);
     updateMPU();
   }
   mManual(0, 0);

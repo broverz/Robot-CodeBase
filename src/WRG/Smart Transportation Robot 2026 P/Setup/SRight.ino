@@ -1,161 +1,48 @@
 void SRight() {
   resetYaw();
-  delay(500);
-  // mManual(45, 48, 3500);
+  delay(250);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-  gyroFL(76);
+  gyroFF(110, 55);
+  gyroFR(51);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(100);
-  gyroFF(285, 55);
-  gyroFR(76);
-  gyroFF(100, 55);
+  gyroFF(110, 55);
+  gyroFL(24);
+  gyroFF(220, 55);
   grabBk();
-  gyroFL(82);
-  gyroFF(200, 55);
+  gyroFF(280, -55);
+  gyroFR(54);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
+  gyroFF(110, 55);
+  gyroFL(50);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
+  gyroFF(250, 55);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
+  gyroFF(110, 55);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-  gyroFR(76);
+  gyroFF(110, 55);
+  gyroFL(51);
 
   lineTrackingPID();
   resetYaw();
-  delay(100);
-  gyroFF(150, 55);
-  gyroFL(76);
+  gyroFF(110, 55);
+  gyroFL(51);
+  lineTrackingPID(1);
+  gyroFL(155);
+  lineTrackingPID(1);
+  gyroFF(110, 55);
+  gyroFR(51);
 
-  lineTrackingPID();
-  resetYaw();
-  delay(100);
-  gyroFF(320, 55);
-  putBk();
-  gyroFR(160);
-  gyroFF(320, 55);
 
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-  gyroFL(76);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-  gyroFR(76);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-  gyroFR(76);
-
-  lineTrackingPID();
-  resetYaw();
-  delay(50);
-  gyroFF(160, 55);
-
-  // lineTrackingPID();
-  // resetYaw();
-  // delay(50);
-  // gyroFF(150, 55);
-  // gyroFR(76);
-
-  // lineTrackingPID();
-  // resetYaw();
-  // delay(50);
-  // gyroFF(150, 55);
-  // putBk();
-
-  // gyroFR(160);
-
-  // lineTrackingPID();
-  // resetYaw();
-  // delay(50);
-  // gyroFF(150, 55);
-  // gyroFR(76);
-
-  // lineTrackingPID();
-  // resetYaw();
-  // delay(50);
-  // gyroFF(150, 55);
-  // gyroFL(76);
-
-  // gyroFF(180, 55);
-
-  // grabBk();
-
-  // gyroFR(80);
-  // gyroFF(50,55);
-
-  // lineTrackingPID();
-  // resetYaw();
-  // delay(50);
-  // gyroFF(150, 55);
-
-  // gyroFF(275, 55);
-
-  // putBk();
 }

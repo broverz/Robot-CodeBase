@@ -12,11 +12,11 @@
 int sensorPin[NUM_SENSORS] = { A0, A1, A2, A3, A4 };
 int sensorVal[NUM_SENSORS];
 int baseLight[NUM_SENSORS] = {
-  2580,
-  3700,
-  3700,
-  3700,
-  3600
+  3550,
+  3550,
+  3550,
+  3550,
+  3550
 };
 float weight[NUM_SENSORS] = { -3, -1.5, 0, 1.5, 3 };
 
@@ -59,7 +59,7 @@ bool isAllBlack() {
   return true;
 }
 
-void lineTrackingPID() {
+void lineTrackingPID(int slow = 0) {
   while (true) {
     lineInput = readLinePosition();
 
@@ -72,9 +72,14 @@ void lineTrackingPID() {
     pid.Compute();
     lineOutput = constrain(lineOutput, -60, 60);
 
-    // int baseSpeed = 45;
-    int leftSpeed = 45 - lineOutput;
-    int rightSpeed = 48 + lineOutput;
+    int leftSpeed, rightSpeed;
+    if (slow == 1) {
+      leftSpeed = 23 - lineOutput;
+      rightSpeed = 24 + lineOutput;
+    } else {
+      leftSpeed = 53 - lineOutput;
+      rightSpeed = 53 + lineOutput;
+    }
 
     leftSpeed = constrain(leftSpeed, 0, 100);
     rightSpeed = constrain(rightSpeed, 0, 100);

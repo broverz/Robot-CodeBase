@@ -5,7 +5,7 @@ void grabBk() {
 
   servo(5, 80);
   delay(250);
-  servo(6, 130);
+  servo(6, 140);
   delay(500);
 
   servo(5, 125);
