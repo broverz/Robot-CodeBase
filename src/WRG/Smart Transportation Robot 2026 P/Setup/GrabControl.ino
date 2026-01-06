@@ -5,7 +5,7 @@ void grabBk() {
 
   servo(5, 80);
   delay(250);
-  servo(6, 140);
+  servo(6, 110);
   delay(500);
 
   servo(5, 125);
@@ -27,6 +27,30 @@ void putBk() {
   servo(6, 45);
   delay(500);
   servo(5, 125);
+  delay(500);
+
+  beep();
+}
+
+
+void putNow() {
+  servo(5, 80);
+  delay(250);
+  servo(5, 125);
+  beep();
+}
+
+void grabBkH() {
+  mManual(0, 0); ao();
+
+  servo(5, 80);
+  delay(250);
+  servo(6, 85);
+  delay(500);
+
+  servo(5, 125);
+  delay(500);
+  servo(6, 45);
   delay(500);
 
   beep();

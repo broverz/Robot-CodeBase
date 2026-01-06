@@ -16,7 +16,7 @@ int baseLight[NUM_SENSORS] = {
   3550,
   3550,
   3550,
-  3550
+  2550
 };
 float weight[NUM_SENSORS] = { -3, -1.5, 0, 1.5, 3 };
 
@@ -59,7 +59,7 @@ bool isAllBlack() {
   return true;
 }
 
-void lineTrackingPID(int slow = 0, unsigned long timeout = 0) {
+void lineTrackingPID(int slow = 0, unsigned long timeout = 0, unsigned long timeoutSlow = 0) {
   unsigned long startTime = millis();
 
   while (true) {
@@ -72,7 +72,6 @@ void lineTrackingPID(int slow = 0, unsigned long timeout = 0) {
     }
 
     lineInput = readLinePosition();
-
     if (isCenterAllBlack()) {
       ao();
       pid.Reset();
@@ -84,11 +83,17 @@ void lineTrackingPID(int slow = 0, unsigned long timeout = 0) {
 
     int leftSpeed, rightSpeed;
     if (slow == 1) {
-      leftSpeed = 23 - lineOutput;
-      rightSpeed = 24 + lineOutput;
+      leftSpeed = 40 - lineOutput;
+      rightSpeed = 41 + lineOutput;
     } else {
       leftSpeed = 53 - lineOutput;
       rightSpeed = 53 + lineOutput;
+      if (timeoutSlow > 0) {
+        if (millis() - startTime >= timeoutSlow) {
+          leftSpeed = 40 - lineOutput;
+          rightSpeed = 41 + lineOutput;
+        }
+      }
     }
 
     leftSpeed = constrain(leftSpeed, 0, 100);
@@ -97,6 +102,6 @@ void lineTrackingPID(int slow = 0, unsigned long timeout = 0) {
     motor(3, leftSpeed);
     motor(1, rightSpeed);
 
-    // delay(10);
+    delay(5);
   }
 }
