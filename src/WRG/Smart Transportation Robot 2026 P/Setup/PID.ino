@@ -59,8 +59,18 @@ bool isAllBlack() {
   return true;
 }
 
-void lineTrackingPID(int slow = 0) {
+void lineTrackingPID(int slow = 0, unsigned long timeout = 0) {
+  unsigned long startTime = millis();
+
   while (true) {
+    if (timeout > 0) {
+      if (millis() - startTime >= timeout) {
+        ao();
+        pid.Reset();
+        return;
+      }
+    }
+
     lineInput = readLinePosition();
 
     if (isCenterAllBlack()) {
