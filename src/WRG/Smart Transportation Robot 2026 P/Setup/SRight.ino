@@ -13,8 +13,8 @@ void SRight() {
   gyroFL(25);
   gyroFF(220, 55);
   grabBk();
-  gyroFF(280, -55);
-  gyroFR(44);
+  gyroFF(200, -55);
+  gyroFR(36);
   putNow();
 
   lineTrackingPID(0, 0);

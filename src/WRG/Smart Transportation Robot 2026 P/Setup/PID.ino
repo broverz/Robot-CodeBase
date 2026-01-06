@@ -12,11 +12,11 @@
 int sensorPin[NUM_SENSORS] = { A0, A1, A2, A3, A4 };
 int sensorVal[NUM_SENSORS];
 int baseLight[NUM_SENSORS] = {
+  3500,
+  3540,
   3550,
-  3550,
-  3550,
-  3550,
-  2550
+  3120,
+  3500
 };
 float weight[NUM_SENSORS] = { -3, -1.5, 0, 1.5, 3 };
 
@@ -86,8 +86,8 @@ void lineTrackingPID(int slow = 0, unsigned long timeout = 0, unsigned long time
       leftSpeed = 40 - lineOutput;
       rightSpeed = 41 + lineOutput;
     } else {
-      leftSpeed = 53 - lineOutput;
-      rightSpeed = 53 + lineOutput;
+      leftSpeed = 57 - lineOutput;
+      rightSpeed = 54 + lineOutput;
       if (timeoutSlow > 0) {
         if (millis() - startTime >= timeoutSlow) {
           leftSpeed = 40 - lineOutput;
@@ -102,6 +102,6 @@ void lineTrackingPID(int slow = 0, unsigned long timeout = 0, unsigned long time
     motor(3, leftSpeed);
     motor(1, rightSpeed);
 
-    delay(5);
+    // delay(5);
   }
 }
