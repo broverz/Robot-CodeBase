@@ -1,3 +1,17 @@
+void FF(int timeout = 500,int S = 75);
+void TT(int timeout = 500,int S = 75);
+void gyroFF(int timeMs, int speed = 75);
+void gyroFL(float angle);
+void gyroFR(float angle);
+
+void Start() {
+  resetYaw();
+  delay(500);
+
+  gyroFF(450);
+  gyroFF(45);
+}
+
 void CheckLight() {
   while (true) {
     oled.clear();
