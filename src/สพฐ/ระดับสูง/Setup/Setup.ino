@@ -2,29 +2,29 @@
 
 #include <Wire.h>
 #include <I2Cdev.h>
-#include <MPU6050.h>
+// #include <MPU6050.h>
 
-MPU6050 mpu;
+// MPU6050 mpu;
 
-int16_t gx, gy, gz;
-float yaw = 0;
-float currentYaw = 0;
-unsigned long lastTime;
+// int16_t gx, gy, gz;
+// float yaw = 0;
+// float currentYaw = 0;
+// unsigned long lastTime;
 
 void setup() {
-  Wire.begin();
   Serial.begin(115200);
-  mpu.initialize();
+  Wire.begin();
+  // mpu.initialize();
 
   delay(100);
-  if (!mpu.testConnection()) {
-    Serial.println("MPU6050 NOT FOUND");
-    while (1)
-      ;
-  }
-  mpu.CalibrateGyro(6);
-  mpu.CalibrateAccel(6);
-  lastTime = millis();
+  // if (!mpu.testConnection()) {
+  //   Serial.println("MPU6050 NOT FOUND");
+  //   while (1)
+  //     ;
+  // }
+  // mpu.CalibrateGyro(6);
+  // mpu.CalibrateAccel(6);
+  // lastTime = millis();
   
   ao();
   beep();
@@ -32,8 +32,8 @@ void setup() {
 }
 
 void loop() {
-  if (SW_OK()) Start();
-  if (SW_A()) CheckLight();
+  if (SW_A()) StartM();
+  if (SW_B()) CheckLight();
 }
 
 void showMessageCenter(const char* msg) {

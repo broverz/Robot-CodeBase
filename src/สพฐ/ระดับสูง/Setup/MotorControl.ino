@@ -1,13 +1,23 @@
+// extern MPU6050 mpu;
+// extern int16_t gx, gy, gz;
+// extern float yaw, currentYaw;
+// extern unsigned long lastTime;
+
 #define MoMaxSpeed1 75
 #define MoMaxSpeed2 75
 #define MoMaxSpeed3 75
 #define MoMaxSpeed4 75
 
+#define sensorL1 1500
+#define sensorL2 1500
+#define sensorR2 1500
+#define sensorR1 1500
+
 void mManual(int S1 = 75, int S2 = 75, int S3 = 75, int S4 = 75, int timeout = 0, bool doBeep = false) {
-  mManual(1, constrain(S1, -100, MoMaxSpeed1));  // หน้าซ้าย
-  mManual(2, constrain(S2, -100, MoMaxSpeed2));  // หน้าขวา
-  mManual(3, constrain(S3, -100, MoMaxSpeed3));  // หลังซ้าย
-  mManual(4, constrain(S4, -100, MoMaxSpeed4));  // หลังขวา
+  motor(1, constrain(S1, -100, MoMaxSpeed1));  // หน้าซ้าย
+  motor(2, constrain(S2, -100, MoMaxSpeed2));  // หน้าขวา
+  motor(3, constrain(S3, -100, MoMaxSpeed3));  // หลังซ้าย
+  motor(4, constrain(S4, -100, MoMaxSpeed4));  // หลังขวา
   if (timeout > 0) {
     delay(timeout);
     ao();
@@ -15,75 +25,138 @@ void mManual(int S1 = 75, int S2 = 75, int S3 = 75, int S4 = 75, int timeout = 0
   if (doBeep) beep();
 }
 
-void FF(int S = 75, int timeout = 500) {
+void FF(int timeout = 500, int S = 75) {
   mManual(S, S, S, S);
   delay(timeout);
   ao();
 }
 
-void TT(int S = 75, int timeout = 500) {
+void TT(int timeout = 500, int S = 75) {
   mManual(-S, S, -S, S);
   delay(timeout);
   ao();
 }
 
-void SL(int S = 75, int timeout = 500) {
+void SL(int timeout = 500, int S = 75) {
   mManual(-S, S, S, -S);
   delay(timeout);
   ao();
 }
 
-void SR(int S = 75, int timeout = 500) {
+void SR(int timeout = 500, int S = 75) {
   mManual(S, -S, -S, S);
   delay(timeout);
   ao();
 }
 
-void updateMPU() {
-  unsigned long now = micros();
-  float dt = (now - lastTime) / 1000000.0;
-  lastTime = now;
-
-  mpu.getRotation(&gx, &gy, &gz);
-  float gz_dps = gz / 131.0;
-  yaw += gz_dps * dt;
-  currentYaw = yaw;
+int rd(int pin) {
+  return analogRead(pin);
 }
 
-void resetYaw() {
-  yaw = 0;
-  currentYaw = 0;
-  lastTime = micros();
-}
-
-void gyroFF(int timeMs, int speed = 75) {
-  unsigned long start = millis();
-  while (millis() - start < timeMs) {
-    mManual(speed, speed, speed, speed);
-    updateMPU();
+void FT(int t = 500, int S = 75) {
+  unsigned long st = millis();
+  while (millis() - st < t) {
+    if (rd(A2) < sensorL2 && rd(A1) < sensorR2) break;
+    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+      mManual(S, S, S, S);
+    else if (rd(A2) < sensorL2 || rd(A4) < sensorL1) mManual(S, -S, S, -S);
+    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
   }
-  mManual(0, 0, 0, 0);
   ao();
 }
 
-void gyroFL(float angle) {
-  updateMPU();
-  float target = currentYaw + angle;
-  while (currentYaw < target) {
-    mManual(-75, 75, -75, 75);
-    updateMPU();
+void FC(int S = 75) {
+  while (rd(A2) > sensorL2 && rd(A1) > sensorR2) {
+    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+      mManual(S, S, S, S);
+    else if (rd(A2) < sensorL2 || rd(A4) < sensorL1) mManual(S, -S, S, -S);
+    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
   }
-  mManual(0, 0, 0, 0);
   ao();
+  // delay(10);
+  // FF(350, -75);
 }
 
-void gyroFR(float angle) {
-  updateMPU();
-  float target = currentYaw - angle;
-  while (currentYaw > target) {
-    mManual(75, -75, 75, -75);
-    updateMPU();
-  }
-  mManual(0, 0, 0, 0);
-  ao();
+bool isBlack() {
+  return (rd(A2) < sensorL2 && rd(A1) < sensorR2);
 }
+bool isBlackAll() {
+  return (rd(A3) < sensorL1 && rd(A2) < sensorL2 && rd(A1) < sensorR2 && rd(A0) < sensorR1);
+}
+
+void FA(int S = 75) {
+  while (true) {
+    FT(250, S);
+    if (!isBlack()) {
+      continue;
+    }
+
+    FF(200, -S);
+    TT(350, -S);
+    delay(100);
+
+    if (isBlack()) {
+      continue;
+    }
+
+    FT(200, -S);
+    TT(700, S);
+    delay(50);
+
+    if (!isBlack()) {
+      continue;
+    }
+
+    ao();
+    break;
+  }
+}
+
+// void updateMPU() {
+//   unsigned long now = micros();
+//   float dt = (now - lastTime) / 1000000.0;
+//   lastTime = now;
+
+//   mpu.getRotation(&gx, &gy, &gz);
+//   float gz_dps = gz / 131.0;
+//   yaw += gz_dps * dt;
+//   currentYaw = yaw;
+// }
+
+// void resetYaw() {
+//   yaw = 0;
+//   currentYaw = 0;
+//   lastTime = micros();
+// }
+
+// void gyroFF(int timeMs, int speed = 75) {
+//   unsigned long start = millis();
+//   while (millis() - start < timeMs) {
+//     mManual(speed, speed, speed, speed);
+//     updateMPU();
+//   }
+//   mManual(0, 0, 0, 0);
+//   ao();
+// }
+
+// void gyroFL(float angle) {
+//   updateMPU();
+//   float target = currentYaw + angle;
+//   while (currentYaw < target) {
+//     mManual(-75, 75, -75, 75);
+//     updateMPU();
+//   }
+//   mManual(0, 0, 0, 0);
+//   ao();
+// }
+
+// void gyroFR(float angle) {
+//   updateMPU();
+//   float target = currentYaw - angle;
+//   while (currentYaw > target) {
+//     mManual(75, -75, 75, -75);
+//     updateMPU();
+//   }
+//   mManual(0, 0, 0, 0);
+//   ao();
+// }
