@@ -1,7 +1,7 @@
 #define Servo1 5
 #define Servo2 6
 
-void openBk(int Bk = 1) {
+void shotCude(int Bk = 1) {
   switch (Bk) {
     case 1:
       servo(Servo1, 180);
@@ -24,9 +24,4 @@ void openBk(int Bk = 1) {
       servo(Servo2, 28);
       break;
   }
-}
-
-void closeBk() {
-  servo(Servo2, 28);
-  servo(Servo2, 28);
 }

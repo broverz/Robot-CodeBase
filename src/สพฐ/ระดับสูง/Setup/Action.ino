@@ -21,6 +21,9 @@ void CheckLight() {
     oled.text(1, 0, "LL  = %d", analogRead(A2));
     oled.text(2, 0, "RR  = %d", analogRead(A1));
     oled.text(3, 0, "R = %d", analogRead(A0));
+
+    oled.text(6, 0, "BL = %d", analogRead(A8));
+    oled.text(7, 0, "BR = %d", analogRead(A7));
     oled.show();
   }
 }

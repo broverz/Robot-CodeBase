@@ -27,6 +27,8 @@ void setup() {
   // lastTime = millis();
   
   ao();
+  servo(5, 100);
+  servo(6, 100);
   beep();
   showMessageCenter("SSKW RB Ready");
 }
