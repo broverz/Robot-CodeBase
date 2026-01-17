@@ -91,10 +91,10 @@ bool FC(int S = 75) {
     return true;
   }
 
-    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-      mManual(S, S, S, S);
-    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+  if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+    mManual(S, S, S, S);
+  else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+  else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
   return false;
 }
 
@@ -110,7 +110,7 @@ void FA(int S = 75) {
       ao();
       return;
     }
-    TT(377, -S);
+    TT(378, -S);
     delay(150);
     if (isStopMark()) {
       ao();
@@ -128,10 +128,10 @@ void FA(int S = 75) {
         hasLine = true;
         break;
       }
-    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-      mManual(S, S, S, S);
-    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+      if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+        mManual(S, S, S, S);
+      else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+      else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
     }
 
     if (!hasLine) {
@@ -154,10 +154,10 @@ void FA(int S = 75) {
         ao();
         return;
       }
-    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-      mManual(S, S, S, S);
-    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+      if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+        mManual(S, S, S, S);
+      else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+      else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
     }
     ao();
   }
