@@ -8,10 +8,10 @@
 #define MoMaxSpeed3 75
 #define MoMaxSpeed4 75
 
-#define sensorL1 1500
-#define sensorL2 1500
-#define sensorR2 1500
-#define sensorR1 1500
+#define sensorL1 1200
+#define sensorL2 1800
+#define sensorR2 1800
+#define sensorR1 1200
 
 void mManual(int S1 = 75, int S2 = 75, int S3 = 75, int S4 = 75, int timeout = 0, bool doBeep = false) {
   motor(1, constrain(S1, -100, MoMaxSpeed1));  // หน้าซ้าย
@@ -59,57 +59,109 @@ void FT(int t = 500, int S = 75) {
     if (rd(A2) < sensorL2 && rd(A1) < sensorR2) break;
     if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
       mManual(S, S, S, S);
-    else if (rd(A2) < sensorL2 || rd(A4) < sensorL1) mManual(S, -S, S, -S);
     else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
   }
   ao();
 }
 
-void FC(int S = 75) {
-  while (rd(A2) > sensorL2 && rd(A1) > sensorR2) {
+int blackCount() {
+  int c = 0;
+  if (rd(A3) < sensorL1) c++;
+  if (rd(A2) < sensorL2) c++;
+  if (rd(A1) < sensorR2) c++;
+  if (rd(A0) < sensorR1) c++;
+  return c;
+}
+bool isLine() {
+  int c = blackCount();
+  return (c >= 2 && c <= 3);
+}
+bool isStopMark() {
+  return blackCount() == 4;
+}
+
+bool FC(int S = 75) {
+  if (isStopMark()) {
+    ao();
+    return true;
+  }
+  if (isLine()) {
+    ao();
+    return true;
+  }
+
     if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
       mManual(S, S, S, S);
-    else if (rd(A2) < sensorL2 || rd(A4) < sensorL1) mManual(S, -S, S, -S);
     else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-  }
-  ao();
-  // delay(10);
-  // FF(350, -75);
+    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+  return false;
 }
 
-bool isBlack() {
-  return (rd(A2) < sensorL2 && rd(A1) < sensorR2);
-}
-bool isBlackAll() {
-  return (rd(A3) < sensorL1 && rd(A2) < sensorL2 && rd(A1) < sensorR2 && rd(A0) < sensorR1);
-}
 
 void FA(int S = 75) {
   while (true) {
-    FT(250, S);
-    if (!isBlack()) {
-      continue;
-    }
+    if (!FC(S)) continue;
+    if (isStopMark()) break;
+    ao();
 
     FF(200, -S);
-    TT(350, -S);
-    delay(100);
-
-    if (isBlack()) {
-      continue;
+    if (isStopMark()) {
+      ao();
+      return;
+    }
+    TT(377, -S);
+    delay(150);
+    if (isStopMark()) {
+      ao();
+      break;
     }
 
-    FT(200, -S);
-    TT(700, S);
-    delay(50);
+    unsigned long t = millis();
+    bool hasLine = false;
+    while (millis() - t < 600) {
+      if (isStopMark()) {
+        ao();
+        return;
+      }
+      if (isLine()) {
+        hasLine = true;
+        break;
+      }
+    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+      mManual(S, S, S, S);
+    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+    }
 
-    if (!isBlack()) {
+    if (!hasLine) {
+      ao();
       continue;
     }
 
     ao();
-    break;
+    FF(200, -S);
+    if (isStopMark()) {
+      ao();
+      return;
+    }
+    TT(718, S);
+    delay(150);
+
+    t = millis();
+    while (millis() - t < 600) {
+      if (isStopMark()) {
+        ao();
+        return;
+      }
+    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+      mManual(S, S, S, S);
+    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
+    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+    }
+    ao();
   }
+  ao();
 }
 
 // void updateMPU() {

@@ -1,5 +1,4 @@
 void FA(int S = 75);
-void FC(int S = 75);
 void FF(int timeout = 500, int S = 75);
 void FT(int timeout = 500, int S = 75);
 void TT(int timeout = 500, int S = 75);
@@ -9,10 +8,10 @@ void TT(int timeout = 500, int S = 75);
 
 void StartM() {
   // resetYaw();
-  // delay(500);
+  delay(500);
 
   FA(75);
-  // FT(700);
+  // FT(3000);
 }
 
 void CheckLight() {
