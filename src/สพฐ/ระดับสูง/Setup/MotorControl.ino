@@ -9,12 +9,12 @@
 #define MoMaxSpeed4 75
 
 #define sensorL1 1200
-#define sensorL2 1800
-#define sensorR2 1800
+#define sensorL2 1700
+#define sensorR2 1700
 #define sensorR1 1200
 
-#define sensorBL 1000
-#define sensorBR 1000
+#define sensorBL 1100
+#define sensorBR 1100
 
 void mManual(int S1 = 75, int S2 = 75, int S3 = 75, int S4 = 75, int timeout = 0, bool doBeep = false) {
   motor(1, constrain(S1, -100, MoMaxSpeed1));  // หน้าซ้าย
@@ -169,10 +169,12 @@ bool FC(int S = 75) {
 void SCR(int S = 75) {
   while (1) {
     // if (rd(A0) < sensorR1 && rd(A7) < sensorBR) break;
-    if (rd(A0) > sensorR1 || rd(A7) > sensorBR)
+    if (rd(A0) > sensorR1 && rd(A7) > sensorBR)
       mManual(S, -S, -S, S);
     else if (rd(A0) < sensorR1)
+      mManual(S + 8, -S, -S, S);
     else if (rd(A7) < sensorBR)
+      mManual(S, -S, -S, S + 8);
     else break;
   }
   ao();
