@@ -1,20 +1,19 @@
-// extern MPU6050 mpu;
-// extern int16_t gx, gy, gz;
-// extern float yaw, currentYaw;
-// extern unsigned long lastTime;
+extern MPU6050 mpu;
+extern int16_t gx, gy, gz;
+extern float yaw, currentYaw;
+extern unsigned long lastTime;
 
-#define MoMaxSpeed1 75
-#define MoMaxSpeed2 75
+#define MoMaxSpeed1 50
+#define MoMaxSpeed2 50
 #define MoMaxSpeed3 75
 #define MoMaxSpeed4 75
 
-#define sensorL1 1200
-#define sensorL2 1700
-#define sensorR2 1700
-#define sensorR1 1200
+#define sensorLL 3000
+#define sensorCC 3000
+#define sensorRR 3000
 
-#define sensorBL 1100
-#define sensorBR 1100
+#define sensorBL 3000
+#define sensorBR 3000
 
 void mManual(int S1 = 75, int S2 = 75, int S3 = 75, int S4 = 75, int timeout = 0, bool doBeep = false) {
   motor(1, constrain(S1, -100, MoMaxSpeed1));  // หน้าซ้าย
@@ -40,199 +39,181 @@ void TT(int timeout = 500, int S = 75) {
   ao();
 }
 
-void SL(int timeout = 500, int S = 75) {
-  mManual(-S, S, S, -S);
-  delay(timeout);
-  ao();
-}
-
-void SR(int timeout = 500, int S = 75) {
-  mManual(S - 5, -S, -S, S);
-  delay(timeout);
-  ao();
-}
-
 int rd(int pin) {
   return analogRead(pin);
 }
-int blackCount() {
-  int c = 0;
-  if (rd(A3) < sensorL1) c++;
-  if (rd(A2) < sensorL2) c++;
-  if (rd(A1) < sensorR2) c++;
-  if (rd(A0) < sensorR1) c++;
-  return c;
+int L() {
+  return rd(A0);
 }
-bool isLine() {
-  int c = blackCount();
-  return (c >= 2 && c <= 3);
+int C() {
+  return rd(A1);
 }
-bool isStopMark() {
-  return blackCount() == 4;
+int R() {
+  return rd(A2);
 }
 
-void FT(int t = 500, int S = 75) {
+bool blackL() {
+  return L() < sensorLL;
+}
+bool blackC() {
+  return C() < sensorCC;
+}
+bool blackR() {
+  return R() < sensorRR;
+}
+
+bool allBlack() {
+  return blackL() && blackC() && blackR();
+}
+
+void follow3(int S = 75) {
+
+  if (allBlack()) {  // เจอทั้งสาม
+    ao();
+    return;
+  }
+
+  if (blackL()) {  // ซ้ายสุดเจอ → ล้อขวาเดิน
+    mManual(0, S, 0, S);
+  } else if (blackR()) {  // ขวาสุดเจอ → ล้อซ้ายเดิน
+    mManual(S, 0, S, 0);
+  } else if (blackC()) {  // กลางเจอ → ตรง
+    mManual(S, S, S, S);
+  } else {  // ไม่เจอเส้น
+    mManual(S, S, S, S);
+  }
+}
+
+bool goBlock(int S = 75) {
   unsigned long st = millis();
-  while (millis() - st < t) {
-    if (rd(A2) < sensorL2 && rd(A1) < sensorR2) break;
-    if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-      mManual(S, S, S, S);
-    else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-    else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
+  while (millis() - st < 550) {
+    if (allBlack()) {
+      ao();
+      return true;  // เจอดำ
+    }
+    follow3(S);
   }
   ao();
+  return false;  // ไม่เจอดำ
 }
 
-bool FC(int S = 75) {
-  if (isStopMark()) {
-    ao();
-    return true;
-  }
-  if (isLine()) {
-    ao();
-    return true;
-  }
+void turnR() {
+  gyroFR(75);
+}
+void turnL() {
+  gyroFL(75);
+}
 
-  if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-    mManual(S, S, S, S);
-  else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-  else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
-  return false;
+void backBlock(int S = 75) {
+  gyroFF(100, -S);
+    ao();
 }
 
 
-// void FA(int S = 75) {
-//   while (true) {
-//     if (!FC(S)) continue;
-//     if (isStopMark()) break;
-//     ao();
-
-//     FF(200, -S);
-//     if (isStopMark()) {
-//       ao();
-//       return;
-//     }
-//     TT(378, -S);
-//     delay(150);
-//     if (isStopMark()) {
-//       ao();
-//       break;
-//     }
-
-//     unsigned long t = millis();
-//     bool hasLine = false;
-//     while (millis() - t < 600) {
-//       if (isStopMark()) {
-//         ao();
-//         return;
-//       }
-//       if (isLine()) {
-//         hasLine = true;
-//         break;
-//       }
-//       if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-//         mManual(S, S, S, S);
-//       else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-//       else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
-//     }
-
-//     if (!hasLine) {
-//       ao();
-//       continue;
-//     }
-
-//     ao();
-//     FF(200, -S);
-//     if (isStopMark()) {
-//       ao();
-//       return;
-//     }
-//     TT(718, S);
-//     delay(150);
-
-//     t = millis();
-//     while (millis() - t < 600) {
-//       if (isStopMark()) {
-//         ao();
-//         return;
-//       }
-//       if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
-//         mManual(S, S, S, S);
-//       else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, S, -S, S);
-//       else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, -S, S, -S);
-//     }
-//     ao();
+// void FT(int t = 500, int S = 75) {
+//   unsigned long st = millis();
+//   while (millis() - st < t) {
+//     if (rd(A2) < sensorL2 && rd(A1) < sensorR2) break;
+//     if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+//       mManual(S, S, S, S);
+//     else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, -S, S, S);
+//     else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, S, -S, -S);
 //   }
 //   ao();
 // }
 
-void SCR(int S = 75) {
-  while (1) {
-    // if (rd(A0) < sensorR1 && rd(A7) < sensorBR) break;
-    if (rd(A0) > sensorR1 && rd(A7) > sensorBR)
-      mManual(S, -S, -S, S);
-    else if (rd(A0) < sensorR1)
-      mManual(S + 8, -S, -S, S);
-    else if (rd(A7) < sensorBR)
-      mManual(S, -S, -S, S + 8);
-    else break;
-  }
-  ao();
-  SR(420, -S);
-}
+// bool FC(int S = 75) {
+//   if (allBlack()) {
+//     ao();
+//     return true;
+//   }
+
+//   if (rd(A3) > sensorL1 && rd(A2) > sensorL2 && rd(A1) > sensorR2 && rd(A0) > sensorR1)
+//     mManual(S, S, S, S);
+//   else if (rd(A1) < sensorR2 || rd(A0) < sensorR1) mManual(-S, -S, S, S);
+//   else if (rd(A2) < sensorL2 || rd(A3) < sensorL1) mManual(S, S, -S, -S);
+//   return false;
+// }
 
 void FA(int S = 75) {
   while (1) {
-    FT(550, S);
-    SCR(40);
+
+    // เดินหน้า 1 block
+    if (goBlock(S)) continue;
+
+    // ---------- เช็คขวา ----------
+    turnR();
+    if (goBlock(S)) {
+      backBlock(S);
+      turnL();  // กลับทิศเดิม
+    }
+
+    // ---------- เช็คซ้าย ----------
+    turnL();
+    if (goBlock(S)) {
+      backBlock(S);
+      turnR();
+    }
+
+    // ---------- เดินต่อ ----------
+    if (goBlock(S)) continue;
+
+    // ถ้าเจอดำอีก → เลี้ยวซ้าย 2 ครั้ง
+    turnL();
+    goBlock(S);
+    // if (goBlock(S)) {
+    //   turnL();
+    //   goBlock(S);
+    // }
   }
 }
 
-// void updateMPU() {
-//   unsigned long now = micros();
-//   float dt = (now - lastTime) / 1000000.0;
-//   lastTime = now;
 
-//   mpu.getRotation(&gx, &gy, &gz);
-//   float gz_dps = gz / 131.0;
-//   yaw += gz_dps * dt;
-//   currentYaw = yaw;
-// }
+void updateMPU() {
+  unsigned long now = micros();
+  float dt = (now - lastTime) / 1000000.0;
+  lastTime = now;
 
-// void resetYaw() {
-//   yaw = 0;
-//   currentYaw = 0;
-//   lastTime = micros();
-// }
+  mpu.getRotation(&gx, &gy, &gz);
+  float gz_dps = gz / 131.0;
+  yaw += gz_dps * dt;
+  currentYaw = yaw;
+}
 
-// void gyroFF(int timeMs, int speed = 75) {
-//   unsigned long start = millis();
-//   while (millis() - start < timeMs) {
-//     mManual(speed, speed, speed, speed);
-//     updateMPU();
-//   }
-//   mManual(0, 0, 0, 0);
-//   ao();
-// }
+void resetYaw() {
+  yaw = 0;
+  currentYaw = 0;
+  lastTime = micros();
+}
 
-// void gyroFL(float angle) {
-//   updateMPU();
-//   float target = currentYaw + angle;
-//   while (currentYaw < target) {
-//     mManual(-75, 75, -75, 75);
-//     updateMPU();
-//   }
-//   mManual(0, 0, 0, 0);
-//   ao();
-// }
+void gyroFF(int timeMs, int speed = 75) {
+  unsigned long start = millis();
+  while (millis() - start < timeMs) {
+    mManual(speed, speed, speed, speed);
+    updateMPU();
+  }
+  mManual(0, 0, 0, 0);
+  ao();
+}
 
-// void gyroFR(float angle) {
-//   updateMPU();
-//   float target = currentYaw - angle;
-//   while (currentYaw > target) {
-//     mManual(75, -75, 75, -75);
-//     updateMPU();
-//   }
-//   mManual(0, 0, 0, 0);
-//   ao();
-// }
+void gyroFL(float angle) {
+  updateMPU();
+  float target = currentYaw + angle;
+  while (currentYaw < target) {
+    mManual(-65, -65, 65, 65);
+    updateMPU();
+  }
+  mManual(0, 0, 0, 0);
+  ao();
+}
+
+void gyroFR(float angle) {
+  updateMPU();
+  float target = currentYaw - angle;
+  while (currentYaw > target) {
+    mManual(65, 65, -65, -65);
+    updateMPU();
+  }
+  mManual(0, 0, 0, 0);
+  ao();
+}
